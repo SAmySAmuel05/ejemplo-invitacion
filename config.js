@@ -44,7 +44,7 @@ const bodaConfig = {
     // 📖 TEXTOS
     historia: {
         titulo: "Nuestra Historia",
-        texto: "Un primer encuentro que quedó grabado en nuestras mentes... hemos decidido también ser compañeritos de vida para amarnos por toda la eternidad."
+        texto: "Texto de los novios."
     },
 
     biblia: {
