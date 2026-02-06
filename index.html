@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invitación de Boda</title>
+  <link rel="icon" type="image/png" href="media/images/icons/favicon.png">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gold: 'var(--color-primary)',   // El color principal del config.js
+            silver: 'var(--color-secondary)' // El color secundario
+          },
+          fontFamily: {
+            elegant: ['Playfair Display', 'serif'],
+            script: ['Great Vibes', 'cursive'] // Asegúrate de cargar esta fuente si la usas
+          }
+        }
+      }
+    }
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Great+Vibes&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+       --color-primary: #D4AF37; /* Valor por defecto */
+       --color-secondary: #E5E7EB;
+    }
+    .hidden-anim { opacity: 0; transform: translateY(30px); transition: all 1s ease-out; }
+    .show-anim { opacity: 1; transform: translateY(0); }
+    /* Animación de iconos itinerario */
+    .icon-anim { filter: grayscale(100%); transition: all 0.5s; }
+    .icon-anim.active { filter: grayscale(0%) drop-shadow(0 0 5px var(--color-primary)); transform: scale(1.1); }
+    /* Scroll suave */
+    html { scroll-behavior: smooth; }
+  </style>
+</head>
+
+<body class="bg-black text-silver font-elegant overflow-x-hidden">
+
+  <div id="overlay" class="fixed inset-0 flex items-center justify-center z-50 bg-black/90 transition-opacity duration-1000">
+      <button id="startBtn" class="border border-gold text-gold px-10 py-4 text-xl tracking-[0.3em] hover:bg-gold hover:text-black transition duration-500 uppercase">
+        Ver Invitación
+      </button>
+  </div>
+
+  <audio id="music" loop></audio>
+  <button id="music-toggle" class="fixed top-6 right-6 z-40 bg-black/50 p-3 rounded-full border border-gold/30 backdrop-blur hidden">
+      <img id="music-icon" src="media/images/icons/boton-de-play.png" class="w-6 h-6 invert">
+  </button>
+
+  <main id="sec-inicio" class="relative min-h-screen bg-cover bg-center flex flex-col justify-center items-center text-center px-4">
+      <div class="absolute inset-0 bg-black/60"></div>
+      
+      <div class="relative z-10 w-full animate-fade-in">
+          <p id="lbl-frase" class="text-lg md:text-xl tracking-[0.2em] uppercase mb-4 text-silver"></p>
+          <h1 id="lbl-nombres" class="font-script text-6xl md:text-8xl lg:text-9xl text-gold mb-6 leading-tight"></h1>
+          <p id="lbl-fecha" class="text-xl md:text-2xl border-y border-gold/50 inline-block py-2 px-8"></p>
+      </div>
+
+      <div id="countdown" class="relative z-10 flex gap-4 md:gap-8 mt-16 text-gold">
+          <div class="text-center"><span id="d" class="text-4xl md:text-6xl font-bold block">00</span><small class="text-xs tracking-widest text-silver">DÍAS</small></div>
+          <div class="text-center"><span id="h" class="text-4xl md:text-6xl font-bold block">00</span><small class="text-xs tracking-widest text-silver">HRS</small></div>
+          <div class="text-center"><span id="m" class="text-4xl md:text-6xl font-bold block">00</span><small class="text-xs tracking-widest text-silver">MIN</small></div>
+          <div class="text-center"><span id="s" class="text-4xl md:text-6xl font-bold block">00</span><small class="text-xs tracking-widest text-silver">SEG</small></div>
+      </div>
+  </main>
+
+  <section id="sec-historia" class="relative py-24 px-6 bg-cover bg-fixed text-center flex items-center justify-center min-h-[70vh]">
+      <div class="absolute inset-0 bg-black/70"></div>
+      <div class="relative z-10 max-w-3xl observe hidden-anim">
+          <h2 id="lbl-historia-titulo" class="text-4xl md:text-5xl text-gold mb-8 font-script"></h2>
+          <p id="lbl-historia-texto" class="text-xl md:text-2xl leading-relaxed italic text-gray-200"></p>
+      </div>
+  </section>
+
+  <section id="sec-biblia" class="relative py-24 px-6 bg-cover bg-center text-center flex items-center justify-center min-h-[60vh]">
+      <div class="absolute inset-0 bg-black/60"></div>
+      <div class="relative z-10 max-w-4xl observe hidden-anim">
+          <p id="lbl-biblia-cita" class="text-2xl md:text-4xl font-light mb-6"></p>
+          <p id="lbl-biblia-ref" class="text-gold tracking-widest uppercase"></p>
+      </div>
+  </section>
+
+  <section id="sec-vestimenta" class="relative py-20 px-6 bg-cover bg-center text-center border-t border-gold/20">
+      <div class="absolute inset-0 bg-black/80"></div>
+      <div class="relative z-10 max-w-2xl mx-auto border border-gold/30 p-10 rounded-xl bg-white/5 backdrop-blur-sm observe hidden-anim">
+          <img id="img-vestimenta" src="" class="w-16 h-16 mx-auto mb-6 opacity-80 invert">
+          <h2 id="lbl-vestimenta-titulo" class="text-3xl text-gold mb-2"></h2>
+          <h3 id="lbl-vestimenta-tipo" class="text-xl uppercase tracking-widest mb-4 font-bold"></h3>
+          <p id="lbl-vestimenta-nota" class="text-gray-300"></p>
+      </div>
+  </section>
+
+  <section id="sec-ubicacion" class="relative py-24 px-6 bg-black text-center">
+      <div class="max-w-4xl mx-auto observe hidden-anim">
+          <h2 id="lbl-ubicacion-titulo" class="text-4xl text-gold mb-10 font-script"></h2>
+          
+          <div class="bg-white/5 p-8 rounded-2xl border border-white/10">
+              <h3 id="lbl-lugar-nombre" class="text-2xl text-gold mb-2"></h3>
+              <p id="lbl-lugar-dir" class="text-gray-400 mb-6"></p>
+              
+              <button id="btn-toggle-map" class="text-gold uppercase text-sm tracking-widest border-b border-gold pb-1 mb-6 hover:text-white transition">
+                  Ver Mapa
+              </button>
+
+              <div id="map-container" class="overflow-hidden transition-all duration-700 max-h-0">
+                  <iframe id="iframe-mapa" class="w-full h-80 rounded-lg grayscale invert hover:grayscale-0 transition duration-500" loading="lazy"></iframe>
+                  <a id="btn-mapa-link" href="#" target="_blank" class="inline-block mt-4 bg-gold text-black px-6 py-2 rounded-full font-bold text-sm">Abrir en Google Maps</a>
+              </div>
+          </div>
+      </div>
+  </section>
+
+  <section id="sec-itinerario" class="relative py-24 px-4 bg-cover bg-fixed">
+      <div class="absolute inset-0 bg-black/80"></div>
+      <div class="relative z-10 max-w-lg mx-auto">
+          <h2 class="text-4xl text-center text-gold mb-16 font-script observe hidden-anim">Itinerario</h2>
+          <div id="itinerario-list" class="relative observe hidden-anim">
+              </div>
+      </div>
+  </section>
+
+  <section id="sec-regalos" class="relative py-24 px-6 bg-cover bg-center text-center">
+      <div class="absolute inset-0 bg-black/70"></div>
+      <div class="relative z-10 max-w-4xl mx-auto observe hidden-anim">
+          <h2 class="text-4xl text-gold mb-6 font-script">Mesa de Regalos</h2>
+          <p id="lbl-regalos-frase" class="mb-10 text-lg"></p>
+
+          <div class="flex flex-col md:flex-row justify-center gap-8">
+              <div class="bg-white/5 border border-gold/30 p-8 rounded-xl flex-1">
+                  <h3 class="text-xl text-gold mb-4">Sobre / Transferencia</h3>
+                  <div id="datos-banco" class="text-sm space-y-2 mb-4"></div>
+              </div>
+              
+              <div id="box-amazon" class="bg-white/5 border border-gold/30 p-8 rounded-xl flex-1 flex flex-col justify-center items-center">
+                  <h3 class="text-xl text-gold mb-4">Mesa de Regalos</h3>
+                  <a id="btn-amazon" href="#" target="_blank" class="bg-gold text-black px-8 py-3 rounded-full font-bold hover:bg-white transition">
+                      Ver en Amazon
+                  </a>
+              </div>
+          </div>
+      </div>
+  </section>
+
+  <section id="sec-rsvp" class="relative py-24 px-6 bg-cover bg-center text-center">
+      <div class="absolute inset-0 bg-black/70"></div>
+      <div class="relative z-10 max-w-2xl mx-auto observe hidden-anim">
+          <h2 class="text-4xl text-gold mb-6 font-script">Confirmación de Asistencia</h2>
+          <p id="lbl-rsvp-frase" class="mb-10 text-gray-300"></p>
+          
+          <div class="flex flex-col sm:flex-row justify-center gap-4">
+              <a id="btn-rsvp-wa" href="#" target="_blank" class="bg-[#25D366] text-white px-8 py-4 rounded-full font-bold flex items-center justify-center gap-2 hover:brightness-110 transition">
+                  Confirmar por WhatsApp
+              </a>
+              <a id="btn-rsvp-form" href="#" target="_blank" class="border border-gold text-gold px-8 py-4 rounded-full font-bold hover:bg-gold hover:text-black transition">
+                  Llenar Formulario
+              </a>
+          </div>
+      </div>
+  </section>
+
+  <nav id="menu-inferior" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-black/80 backdrop-blur-md border border-gold/30 rounded-full px-6 py-3 hidden md:flex gap-6 shadow-2xl shadow-gold/10">
+     <button onclick="scrollToId('sec-historia')" class="text-xs uppercase tracking-widest hover:text-gold transition">Historia</button>
+     <button onclick="scrollToId('sec-ubicacion')" class="text-xs uppercase tracking-widest hover:text-gold transition">Ubicación</button>
+     <button onclick="scrollToId('sec-itinerario')" class="text-xs uppercase tracking-widest hover:text-gold transition">Itinerario</button>
+     <button onclick="scrollToId('sec-rsvp')" class="text-xs uppercase tracking-widest hover:text-gold transition">RSVP</button>
+  </nav>
+
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
